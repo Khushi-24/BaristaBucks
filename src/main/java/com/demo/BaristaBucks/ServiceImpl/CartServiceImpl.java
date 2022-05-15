@@ -32,8 +32,15 @@ public class CartServiceImpl implements CartService {
         if(cart != null){
             cart.setQuantity(cart.getQuantity() + requestDto.getQuantity());
             cart.setTotalPrice(coffee.getPrice() * cart.getQuantity());
+            cartRepository.save(cart);
+            requestDto.setQuantity(cart.getQuantity());
+            requestDto.setTotalPrice(cart.getTotalPrice());
         }else{
+            cart = new Cart();
             ObjectMapperUtil.map(requestDto, cart);
+            cart.setUser(user);
+            cart.setCoffee(coffee);
+            cart.setTotalPrice(coffee.getPrice());
             cartRepository.save(cart);
             requestDto.setCartId(cart.getId());
         }

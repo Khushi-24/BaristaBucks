@@ -18,4 +18,8 @@ public interface SuccessMessages {
     interface Cart{
         String ITEM_ADDED_SUCCESSFULLY = "Item Added Successfully";
     }
+
+    interface Coupons {
+        String COUPON_ADDED_SUCCESSFULLY = "coupon Added Successfully";
+    }
 }

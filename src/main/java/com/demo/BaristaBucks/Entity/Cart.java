@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "my_cart")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,15 +34,9 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    private Integer quantity;
+    private Long quantity;
 
-    @Column(name = "order_id", insertable = false, updatable = false, nullable = false)
     private Long orderId;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-    private Order order;
 
     private Double totalPrice;
 

@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public UserRequestDto addUpdateUser(@Valid @RequestBody UserRequestDto requestDto) {
         User user;
         User oldUser = userRepository.findByUserEmail(requestDto.getEmail());
-        Role role = roleRepository.getById(2);
+        Role role = roleRepository.getById(2L);
         if(requestDto.getId() != null){
             user = userRepository.findById(requestDto.getId()).orElseThrow(() -> new EntityNotFoundException(User.class, requestDto.getId()));
             if (user != null && oldUser != null && !user.getId().equals(oldUser.getId()))

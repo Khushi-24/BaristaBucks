@@ -11,6 +11,8 @@ import com.demo.BaristaBucks.Util.ObjectMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class CoffeeServiceImpl implements CoffeeService {
@@ -20,28 +22,41 @@ public class CoffeeServiceImpl implements CoffeeService {
 
     @Override
     public CoffeeRequestDto addUpdateCoffee(CoffeeRequestDto requestDto) {
-        Coffee coffee;
-        Coffee oldCoffee = coffeeRepository.findByName(requestDto.getName());
-        if(requestDto.getId() != null){
-            coffee = coffeeRepository.findById(requestDto.getId()).orElseThrow(() -> new EntityNotFoundException(Coffee.class, requestDto.getId()));
-            if(coffee != null && oldCoffee != null && oldCoffee.getSize().equals(coffee.getSize())){
+        Coffee coffee = coffeeRepository.findByNameAndSize(requestDto.getName(), requestDto.getSize());
+        if(coffee != null){
+            if(requestDto.getId() != null){
+                coffee = coffeeRepository.findById(requestDto.getId()).orElseThrow(() -> new EntityNotFoundException(Coffee.class, requestDto.getId()));
+                if(coffee.getId().equals(requestDto.getId())){
+                    Date createdDate = coffee.getCreatedTimeStamp();
+                    Date updatedDate = coffee.getUpdatedTimeStamp();
+                    coffee = ObjectMapperUtil.map(requestDto, Coffee.class);
+                    coffee.setCreatedTimeStamp(createdDate);
+                    coffee.setUpdatedTimeStamp(updatedDate);
+                    coffeeRepository.save(coffee);
+                    return requestDto;
+                }else {
+                    throw new AlreadyExistsException(Coffee.class, requestDto.getName());
+                }
+            } else {
                 throw new AlreadyExistsException(Coffee.class, requestDto.getName());
             }
-            assert coffee != null;
-            Long id = coffee.getId();
-            ObjectMapperUtil.map(requestDto, coffee);
-            coffee.setId(id);
-            coffeeRepository.save(coffee);
         }else {
-            coffee = new Coffee();
-            if(oldCoffee != null && oldCoffee.getSize().equals(requestDto.getSize())){
-                throw new AlreadyExistsException(Coffee.class, requestDto.getName());
+            if(requestDto.getId() != null){
+                assert false;
+                Date createdDate = coffee.getCreatedTimeStamp();
+                Date updatedDate = coffee.getUpdatedTimeStamp();
+                coffee = coffeeRepository.findById(requestDto.getId()).orElseThrow(() -> new EntityNotFoundException(Coffee.class, requestDto.getId()));
+                coffee.setCreatedTimeStamp(createdDate);
+                coffee.setUpdatedTimeStamp(updatedDate);
+                coffeeRepository.save(coffee);
+            }else{
+                coffee = ObjectMapperUtil.map(requestDto, Coffee.class);
+                coffeeRepository.save(coffee);
+                requestDto.setId(coffee.getId());
             }
-            ObjectMapperUtil.map(requestDto, coffee);
-            coffeeRepository.save(coffee);
-            requestDto.setId(coffee.getId());
+            return requestDto;
         }
-        return requestDto;
+
     }
 
     @Override

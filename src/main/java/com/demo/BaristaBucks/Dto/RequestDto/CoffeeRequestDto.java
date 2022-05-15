@@ -16,7 +16,6 @@ public class CoffeeRequestDto {
     @NotNull(message = "{coffee.name_null_empty}")
     private String name;
 
-    @NotEmpty(message = "{coffee.price_null_empty}")
     @NotNull(message = "{coffee.price_null_empty}")
     private Double price;
 

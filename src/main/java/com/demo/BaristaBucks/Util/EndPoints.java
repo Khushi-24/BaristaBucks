@@ -25,4 +25,9 @@ public class EndPoints {
         String CART = "/cart";
         String ADD_TO_CART = CART + "/addToCart";
     }
+
+    public interface Coupon{
+        String COUPON = "/coupon";
+        String ADD_COUPON = COUPON + "/addCoupon";
+    }
 }
