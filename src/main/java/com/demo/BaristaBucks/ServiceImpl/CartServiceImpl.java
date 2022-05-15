@@ -42,8 +42,20 @@ public class CartServiceImpl implements CartService {
             cart.setCoffee(coffee);
             cart.setTotalPrice(coffee.getPrice());
             cartRepository.save(cart);
+            requestDto.setTotalPrice(cart.getTotalPrice());
             requestDto.setCartId(cart.getId());
         }
+        return requestDto;
+    }
+
+    @Override
+    public CartRequestDto addRemoveItemFromCart(CartRequestDto requestDto) {
+        Coffee coffee = coffeeRepository.findById(requestDto.getCoffeeId()).orElseThrow(() -> new EntityNotFoundException(Cart.class, requestDto.getCoffeeId()));
+        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new EntityNotFoundException(User.class, requestDto.getUserId()));
+        Cart cart = cartRepository.findByCoffeeIdAndUserId(requestDto.getCoffeeId(), requestDto.getUserId());
+        cart.setQuantity(requestDto.getQuantity());
+        cart.setTotalPrice(coffee.getPrice() * cart.getQuantity());
+        cartRepository.save(cart);
         return requestDto;
     }
 }

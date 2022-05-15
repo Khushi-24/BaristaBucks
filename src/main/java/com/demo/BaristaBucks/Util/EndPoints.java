@@ -24,10 +24,13 @@ public class EndPoints {
     public interface Cart{
         String CART = "/cart";
         String ADD_TO_CART = CART + "/addToCart";
+        String ADD_OR_REMOVE_FROM_CART = CART + "/addOrRemoveFromCart";
     }
 
     public interface Coupon{
         String COUPON = "/coupon";
         String ADD_COUPON = COUPON + "/addCoupon";
+        String APPLY_COUPON = COUPON + "/applyCoupon";
+
     }
 }

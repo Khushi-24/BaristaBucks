@@ -27,5 +27,10 @@ public class CartController {
         return ApiResponse.sendCreatedResponse(SuccessMessages.Cart.ITEM_ADDED_SUCCESSFULLY, cart);
     }
 
+    @PostMapping(EndPoints.Cart.ADD_OR_REMOVE_FROM_CART)
+    public ResponseEntity<?> addOrRemoveFromCart(@Valid @RequestBody CartRequestDto requestDto) {
+        CartRequestDto cart = cartService.addRemoveItemFromCart(requestDto);
+        return ApiResponse.sendCreatedResponse(SuccessMessages.Cart.ITEM_ADDED_SUCCESSFULLY, cart);
+    }
 
 }

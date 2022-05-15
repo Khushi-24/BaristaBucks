@@ -1,5 +1,6 @@
 package com.demo.BaristaBucks.Controller;
 
+import com.demo.BaristaBucks.Dto.RequestDto.ApplyCouponRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CoffeeRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CouponDto;
 import com.demo.BaristaBucks.Service.CouponService;
@@ -24,5 +25,11 @@ public class CouponController {
     public ResponseEntity<?> addCoupon(@Valid @RequestBody CouponDto requestDto) {
         CouponDto coupon = couponService.addCoupon(requestDto);
         return ApiResponse.sendCreatedResponse(SuccessMessages.Coupons.COUPON_ADDED_SUCCESSFULLY, coupon);
+    }
+
+    @PostMapping(EndPoints.Coupon.APPLY_COUPON)
+    public ResponseEntity<?> applyCoupon(@Valid @RequestBody ApplyCouponRequestDto requestDto) {
+        Double discountedPrice = couponService.applyCoupon(requestDto);
+        return ApiResponse.sendCreatedResponse(SuccessMessages.Coupons.COUPON_APPLIED_SUCCESSFULLY, discountedPrice);
     }
 }

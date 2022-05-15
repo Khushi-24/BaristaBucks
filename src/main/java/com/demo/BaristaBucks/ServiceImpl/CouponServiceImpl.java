@@ -1,8 +1,12 @@
 package com.demo.BaristaBucks.ServiceImpl;
 
+import com.demo.BaristaBucks.Dto.RequestDto.ApplyCouponRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CouponDto;
+import com.demo.BaristaBucks.Entity.Coffee;
 import com.demo.BaristaBucks.Entity.Coupons;
 import com.demo.BaristaBucks.Exception.AlreadyExistsException;
+import com.demo.BaristaBucks.Exception.BadRequestException;
+import com.demo.BaristaBucks.Exception.EntityNotFoundException;
 import com.demo.BaristaBucks.Repository.CouponRepository;
 import com.demo.BaristaBucks.Service.CouponService;
 import com.demo.BaristaBucks.Util.ObjectMapperUtil;
@@ -23,6 +27,24 @@ public class CouponServiceImpl implements CouponService {
             return ObjectMapperUtil.map(coupons, CouponDto.class);
         }else{
             throw new AlreadyExistsException(Coupons.class,requestDto.getCouponName());
+        }
+    }
+
+    @Override
+    public Double applyCoupon(ApplyCouponRequestDto requestDto) {
+        Coupons coupons = couponRepository.findById(requestDto.getCouponId()).orElseThrow(() -> new EntityNotFoundException(Coupons.class, requestDto.getCouponId()));
+        if(coupons != null){
+            if(requestDto.getTotalCartPrice() > coupons.getMinimumOrderAmount()){
+                Double discountPrice = (requestDto.getTotalCartPrice() * coupons.getDiscountPercentage())/100d;
+                if(discountPrice > coupons.getMaxDiscountPrice()){
+                    discountPrice = Double.valueOf(coupons.getMaxDiscountPrice());
+                }
+                return discountPrice;
+            }else {
+               throw new BadRequestException("Minimum cart value should be: " +coupons.getMinimumOrderAmount());
+            }
+        }else {
+            throw new EntityNotFoundException("Coupon doesn't exists with id" +requestDto.getCouponId());
         }
     }
 }
