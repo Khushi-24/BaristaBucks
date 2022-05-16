@@ -2,14 +2,18 @@ package com.demo.BaristaBucks.Entity;
 
 import com.demo.BaristaBucks.Common.Entity.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@Where(clause = "deleted_date IS NULL")
+@NoArgsConstructor
 public class Coffee extends BaseEntity {
 
     @Id
@@ -32,6 +36,6 @@ public class Coffee extends BaseEntity {
     private String size;
 
     @ColumnDefault(value = "0")
-    private Boolean is_featured = false;
+    private Boolean isFeatured = false;
 
 }

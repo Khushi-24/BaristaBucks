@@ -19,6 +19,9 @@ public class EndPoints {
         String COFFEE = "/coffee";
         String ADD_UPDATE_COFFEE = COFFEE + "/addUpdateCoffee";
         String FEATURE_UN_FEATURE_COFFEE = COFFEE + "/featureUnFeatureCoffee";
+        String GET_ALL_COFFEE_LIST = COFFEE + "/getListOfCoffee";
+        String GET_LIST_OF_FEATURED_COFFEE = COFFEE + "/getListOfFeaturedCoffee";
+        String GET_LIST_OF_COFFEE_BY_PAST_ORDER = COFFEE + "/getListOfCoffeeByPastOrder/{userId}";
     }
 
     public interface Cart{
@@ -31,6 +34,16 @@ public class EndPoints {
         String COUPON = "/coupon";
         String ADD_COUPON = COUPON + "/addCoupon";
         String APPLY_COUPON = COUPON + "/applyCoupon";
+        String GET_ALL_COUPONS = COUPON + "/getAllCouponsByUserId/{userId}";
+    }
 
+    public interface Order{
+        String ORDER = "/order";
+        String CREATE_ORDER = ORDER + "/createOrder";
+    }
+
+    public interface Rating{
+        String RATING = "/rating";
+        String ADD_RATING = RATING + "/addRating";
     }
 }

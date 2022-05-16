@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -23,8 +22,10 @@ public class CartRequestDto {
     @NotNull(message = "{cart.quantity_null_empty}")
     private Long quantity;
 
+    @NotNull(message = "{order.id_null_empty }")
     private Long orderId;
 
+    @NotNull(message = "{cart.total_cart_price_null}")
     private Double totalPrice;
 
 }

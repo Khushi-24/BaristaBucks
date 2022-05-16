@@ -9,11 +9,13 @@ import com.demo.BaristaBucks.Util.EndPoints;
 import com.demo.BaristaBucks.Util.SuccessMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,5 +33,11 @@ public class CouponController {
     public ResponseEntity<?> applyCoupon(@Valid @RequestBody ApplyCouponRequestDto requestDto) {
         Double discountedPrice = couponService.applyCoupon(requestDto);
         return ApiResponse.sendCreatedResponse(SuccessMessages.Coupons.COUPON_APPLIED_SUCCESSFULLY, discountedPrice);
+    }
+
+    @PostMapping(EndPoints.Coupon.GET_ALL_COUPONS)
+    public ResponseEntity<?> getAllCouponsByUserId(@PathVariable Long userId) {
+        List<CouponDto> couponList = couponService.getAllCouponsByUserId(userId);
+        return ApiResponse.sendOkResponse(SuccessMessages.Coupons.COUPON_FETCHED_SUCCESSFULLY, couponList);
     }
 }

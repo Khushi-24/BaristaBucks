@@ -8,6 +8,6 @@ import lombok.Setter;
 public class FeatureDto {
 
     private Long id;
-    private Boolean is_featured;
+    private Boolean isFeatured;
 
 }

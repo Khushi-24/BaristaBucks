@@ -4,6 +4,7 @@ import com.demo.BaristaBucks.Common.Entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
+@Where(clause = "deleted_date IS NULL")
 public class Cart extends BaseEntity {
 
     @Id

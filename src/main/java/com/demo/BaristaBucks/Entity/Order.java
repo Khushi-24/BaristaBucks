@@ -4,6 +4,7 @@ import com.demo.BaristaBucks.Common.Entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Where(clause = "deleted_date IS NULL")
 public class Order extends BaseEntity {
 
     @Id

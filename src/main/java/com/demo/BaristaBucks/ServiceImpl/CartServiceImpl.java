@@ -26,7 +26,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartRequestDto addItemToCart(CartRequestDto requestDto) {
-        Coffee coffee = coffeeRepository.findById(requestDto.getCoffeeId()).orElseThrow(() -> new EntityNotFoundException(Cart.class, requestDto.getCoffeeId()));
+        Coffee coffee = coffeeRepository.findById(requestDto.getCoffeeId()).orElseThrow(() -> new EntityNotFoundException(Coffee.class, requestDto.getCoffeeId()));
         User user = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new EntityNotFoundException(User.class, requestDto.getUserId()));
         Cart cart = cartRepository.findByCoffeeIdAndUserId(requestDto.getCoffeeId(), requestDto.getUserId());
         if(cart != null){

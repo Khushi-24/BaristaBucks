@@ -3,6 +3,7 @@ package com.demo.BaristaBucks.Entity;
 
 import com.demo.BaristaBucks.Common.Entity.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Where;
@@ -19,6 +20,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class User extends BaseEntity implements UserDetails {
 
     @Id

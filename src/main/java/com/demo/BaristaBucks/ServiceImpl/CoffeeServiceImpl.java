@@ -2,22 +2,30 @@ package com.demo.BaristaBucks.ServiceImpl;
 
 import com.demo.BaristaBucks.Dto.RequestDto.CoffeeRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.FeatureDto;
+import com.demo.BaristaBucks.Dto.ResponseDto.CoffeeListResponseDto;
 import com.demo.BaristaBucks.Entity.Coffee;
 import com.demo.BaristaBucks.Exception.AlreadyExistsException;
 import com.demo.BaristaBucks.Exception.EntityNotFoundException;
+import com.demo.BaristaBucks.Repository.CartRepository;
 import com.demo.BaristaBucks.Repository.CoffeeRepository;
+import com.demo.BaristaBucks.Repository.RatingRepository;
 import com.demo.BaristaBucks.Service.CoffeeService;
 import com.demo.BaristaBucks.Util.ObjectMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CoffeeServiceImpl implements CoffeeService {
 
     private final CoffeeRepository coffeeRepository;
+
+    private final RatingRepository ratingRepository;
+
+    private final CartRepository cartRepository;
 
 
     @Override
@@ -62,8 +70,41 @@ public class CoffeeServiceImpl implements CoffeeService {
     @Override
     public Boolean featureCoffee(FeatureDto requestDto) {
         Coffee coffee = coffeeRepository.findById(requestDto.getId()).orElseThrow(() -> new EntityNotFoundException(Coffee.class, requestDto.getId()));
-        coffee.setIs_featured(requestDto.getIs_featured());
+        coffee.setIsFeatured(requestDto.getIsFeatured());
         coffeeRepository.save(coffee);
-        return requestDto.getIs_featured();
+        return requestDto.getIsFeatured();
+    }
+
+    @Override
+    public List<CoffeeListResponseDto> getListOfCoffee() {
+        List<Coffee> coffeeList = coffeeRepository.findAll();
+        List<CoffeeListResponseDto> coffeeListResponseDtos = ObjectMapperUtil.mapAll(coffeeList, CoffeeListResponseDto.class);
+        coffeeListResponseDtos.forEach(coffeeListResponseDto -> {
+            coffeeListResponseDto.setRating(ratingRepository.findRatingByCoffeeId(coffeeListResponseDto.getId()));
+            coffeeListResponseDto.setNoOfTimesOrdered(cartRepository.countByCoffeeIdAndOrderIdNotNull(coffeeListResponseDto.getId()));
+        });
+        return coffeeListResponseDtos;
+    }
+
+    @Override
+    public List<CoffeeListResponseDto> getListOfFeaturedCoffee() {
+        List<Coffee> coffeeList = coffeeRepository.findAllByIsFeatured(true);
+        List<CoffeeListResponseDto> coffeeListResponseDtos = ObjectMapperUtil.mapAll(coffeeList, CoffeeListResponseDto.class);
+        coffeeListResponseDtos.forEach(coffeeListResponseDto -> {
+            coffeeListResponseDto.setRating(ratingRepository.findRatingByCoffeeId(coffeeListResponseDto.getId()));
+            coffeeListResponseDto.setNoOfTimesOrdered(cartRepository.countByCoffeeIdAndOrderIdNotNull(coffeeListResponseDto.getId()));
+        });
+        return coffeeListResponseDtos;
+    }
+
+    @Override
+    public List<CoffeeListResponseDto> getListOfCoffeeByPastOrder(Long userId) {
+        List<Coffee> coffeeList = coffeeRepository.findByPastOrder(userId);
+        List<CoffeeListResponseDto> coffeeListResponseDtos = ObjectMapperUtil.mapAll(coffeeList, CoffeeListResponseDto.class);
+        coffeeListResponseDtos.forEach(coffeeListResponseDto -> {
+            coffeeListResponseDto.setRating(ratingRepository.findRatingByCoffeeId(coffeeListResponseDto.getId()));
+            coffeeListResponseDto.setNoOfTimesOrdered(cartRepository.countByCoffeeIdAndOrderIdNotNull(coffeeListResponseDto.getId()));
+        });
+        return coffeeListResponseDtos;
     }
 }

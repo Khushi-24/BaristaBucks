@@ -13,7 +13,7 @@ public class CoffeeListResponseDto {
     private String description;
     private String image;
     private String size;
-    private Boolean is_featured;
-    private String rating;
-    private Long no_of_times_ordered;
+    private Boolean isFeatured;
+    private Float rating;
+    private Long noOfTimesOrdered;
 }
