@@ -1,7 +1,9 @@
 package com.demo.BaristaBucks.ServiceImpl;
 
+import com.demo.BaristaBucks.Common.PaginationResponseDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CoffeeRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.FeatureDto;
+import com.demo.BaristaBucks.Dto.RequestDto.PaginationRequestDto;
 import com.demo.BaristaBucks.Dto.ResponseDto.CoffeeListResponseDto;
 import com.demo.BaristaBucks.Entity.Coffee;
 import com.demo.BaristaBucks.Exception.AlreadyExistsException;
@@ -12,6 +14,9 @@ import com.demo.BaristaBucks.Repository.RatingRepository;
 import com.demo.BaristaBucks.Service.CoffeeService;
 import com.demo.BaristaBucks.Util.ObjectMapperUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -76,14 +81,20 @@ public class CoffeeServiceImpl implements CoffeeService {
     }
 
     @Override
-    public List<CoffeeListResponseDto> getListOfCoffee() {
-        List<Coffee> coffeeList = coffeeRepository.findAll();
-        List<CoffeeListResponseDto> coffeeListResponseDtos = ObjectMapperUtil.mapAll(coffeeList, CoffeeListResponseDto.class);
+    public PaginationResponseDto<CoffeeListResponseDto> getListOfCoffee(PaginationRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getPageSize());
+        Page<Coffee> coffeeList = coffeeRepository.findAll(pageable);
+        PaginationResponseDto<CoffeeListResponseDto> responseDto = null;
+        List<CoffeeListResponseDto> coffeeListResponseDtos = ObjectMapperUtil.mapAll(coffeeList.getContent(), CoffeeListResponseDto.class);
         coffeeListResponseDtos.forEach(coffeeListResponseDto -> {
             coffeeListResponseDto.setRating(ratingRepository.findRatingByCoffeeId(coffeeListResponseDto.getId()));
             coffeeListResponseDto.setNoOfTimesOrdered(cartRepository.countByCoffeeIdAndOrderIdNotNull(coffeeListResponseDto.getId()));
         });
-        return coffeeListResponseDtos;
+        responseDto = new PaginationResponseDto<>(
+                coffeeList.getTotalElements(),
+                coffeeList.getPageable().getPageNumber(),
+                coffeeListResponseDtos);
+        return responseDto;
     }
 
     @Override

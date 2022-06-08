@@ -1,7 +1,9 @@
 package com.demo.BaristaBucks.Service;
 
+import com.demo.BaristaBucks.Common.PaginationResponseDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CoffeeRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.FeatureDto;
+import com.demo.BaristaBucks.Dto.RequestDto.PaginationRequestDto;
 import com.demo.BaristaBucks.Dto.ResponseDto.CoffeeListResponseDto;
 
 import java.util.List;
@@ -11,7 +13,7 @@ public interface CoffeeService {
 
     Boolean featureCoffee(FeatureDto requestDto);
 
-    List<CoffeeListResponseDto> getListOfCoffee();
+    PaginationResponseDto<CoffeeListResponseDto> getListOfCoffee(PaginationRequestDto requestDto);
 
     List<CoffeeListResponseDto> getListOfFeaturedCoffee();
 

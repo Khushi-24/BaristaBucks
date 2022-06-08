@@ -1,11 +1,14 @@
 package com.demo.BaristaBucks.Controller;
 
+import com.demo.BaristaBucks.Common.PaginationResponseDto;
 import com.demo.BaristaBucks.Dto.RequestDto.CoffeeRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.FeatureDto;
+import com.demo.BaristaBucks.Dto.RequestDto.PaginationRequestDto;
 import com.demo.BaristaBucks.Dto.RequestDto.UserRequestDto;
 import com.demo.BaristaBucks.Dto.ResponseDto.CoffeeListResponseDto;
 import com.demo.BaristaBucks.Service.CoffeeService;
 import com.demo.BaristaBucks.Util.ApiResponse;
+import com.demo.BaristaBucks.Util.CollectionUtility;
 import com.demo.BaristaBucks.Util.EndPoints;
 import com.demo.BaristaBucks.Util.SuccessMessages;
 import lombok.RequiredArgsConstructor;
@@ -38,21 +41,30 @@ public class CoffeeController {
         }
     }
 
-    @GetMapping(EndPoints.Coffee.GET_ALL_COFFEE_LIST)
-    public ResponseEntity<?> getListOfCoffee() {
-        List<CoffeeListResponseDto> coffee = coffeeService.getListOfCoffee();
+    @PostMapping(EndPoints.Coffee.GET_ALL_COFFEE_LIST)
+    public ResponseEntity<?> getListOfCoffee(@Valid @RequestBody PaginationRequestDto requestDto) {
+        PaginationResponseDto<CoffeeListResponseDto> coffee = coffeeService.getListOfCoffee(requestDto);
+        if(coffee == null){
+            return ApiResponse.sendNoContentResponse();
+        }
         return ApiResponse.sendOkResponse(SuccessMessages.Coffee.COFFEE_LIST_FETCHED_SUCCESSFULLY, coffee);
     }
 
     @GetMapping(EndPoints.Coffee.GET_LIST_OF_FEATURED_COFFEE)
     public ResponseEntity<?> getListOfFeaturedCoffee() {
         List<CoffeeListResponseDto> coffee = coffeeService.getListOfFeaturedCoffee();
+        if(!CollectionUtility.nonNullNonEmpty(coffee)){
+            return ApiResponse.sendNoContentResponse();
+        }
         return ApiResponse.sendOkResponse(SuccessMessages.Coffee.FEATURED_COFFEE_LIST_FETCHED_SUCCESSFULLY, coffee);
     }
 
     @PostMapping(EndPoints.Coffee.GET_LIST_OF_COFFEE_BY_PAST_ORDER)
     public ResponseEntity<?> getListOfCoffeeByPastOrder(@PathVariable Long userId) {
         List<CoffeeListResponseDto> coffee = coffeeService.getListOfCoffeeByPastOrder(userId);
+        if(!CollectionUtility.nonNullNonEmpty(coffee)){
+            return ApiResponse.sendNoContentResponse();
+        }
         return ApiResponse.sendOkResponse(SuccessMessages.Coffee.FEATURED_COFFEE_LIST_FETCHED_SUCCESSFULLY, coffee);
     }
 
